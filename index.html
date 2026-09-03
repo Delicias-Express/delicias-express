@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delicias Express - Menú Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --card-border: #2d2d2d;
+      --accent-gold: #f5a623;
+      --accent-gold-hover: #e0961b;
+      --text-main: #f0f0f0;
+      --text-muted: #a0a0a0;
+      --tag-bg: rgba(245, 166, 35, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Open Sans', sans-serif;
+      padding-bottom: 70px;
+    }
+
+    /* HEADER Y LOGO */
+    header {
+      background: linear-gradient(180deg, #1f1a14 0%, var(--bg-dark) 100%);
+      text-align: center;
+      padding: 30px 20px 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .logo-container {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-gold);
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25);
+      overflow: hidden;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+
+    /* CONTROLES: BUSCADOR Y CATEGORÍAS */
+    .controls {
+      position: sticky;
+      top: 0;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 12px;
+      position: relative;
+      display: block;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 25px;
+      border: 1px solid var(--card-border);
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 10px rgba(245, 166, 35, 0.2);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-gold);
+      color: #121212;
+      border-color: var(--accent-gold);
+      box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
+    }
+
+    /* CONTENEDOR DE PRODUCTOS */
+    main {
+      max-width: 750px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .category-section {
+      margin-bottom: 30px;
+    }
+
+    .category-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--accent-gold);
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .menu-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .menu-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .menu-card:hover {
+      border-color: rgba(245, 166, 35, 0.5);
+    }
+
+    .card-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .item-badge {
+      background-color: var(--tag-bg);
+      color: var(--accent-gold);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      min-width: 34px;
+      text-align: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(245, 166, 35, 0.2);
+    }
+
+    .item-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .item-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .card-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--accent-gold);
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    .extras-box {
+      background-color: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      margin: 30px auto;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .extras-box h4 {
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+    }
+
+    footer a {
+      color: var(--accent-gold);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Delicias Express Logo" onerror="this.style.display='none'">
+    </div>
+    <h1>Delicias Express</h1>
+    <div class="subtitle">Empanadas Fritas</div>
+    <p class="description">
+      Más de 80 combinaciones preparadas al momento. Elige por número y disfruta de la mejor calidad.
+    </p>
+  </header>
+
+  <!-- BUSCADOR Y PESTAÑAS SIMPLIFICADAS -->
+  <section class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por número o ingrediente...">
+    </div>
+    <div class="categories-bar" id="categoriesBar">
+      <button class="filter-btn active" data-view="todas">Empanadas</button>
+      <button class="filter-btn" data-view="sugeridas">★ Sugeridas</button>
+      <button class="filter-btn" data-view="otras">Otras opciones</button>
+    </div>
+  </section>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main id="menuContainer"></main>
+
+  <div style="max-width: 750px; margin: 0 auto; padding: 0 16px;">
+    <div class="extras-box">
+      <h4>Agregados y Aderezos:</h4>
+      • Aderezos (ají, ketchup, mostaza): $300 adicional.<br>
+      • Cada agregado extra tiene un valor diferenciado — consulta al pedir.<br>
+      • Vasos plásticos: $100 / $200 | Cartuchos para llevar: $50 / $100 / $150.
+    </div>
+  </div>
+
+  <footer>
+    <p>📞 +56 32 223 7438 &nbsp;|&nbsp; ✉ delisolange@gmail.com</p>
+    <p>Facebook: Delicias Express &nbsp;|&nbsp; Instagram: @deliciasexpress358</p>
+  </footer>
+
+  <script>
+    // Enlace público CSV de Google Sheets (opcional, si no usas Sheets usará los datos integrados)
+    const SHEET_CSV_URL = '';
+
+    // Lista completa de empanadas del Word
+    const defaultMenu = [
+      // 1 al 19
+      { num: "1", es: "Queso Solo", en: "Cheese", precio: "", sugerida: false, especial: false },
+      { num: "2", es: "Pino Marisco", en: "Seafood Pino", precio: "", sugerida: false, especial: false },
+      { num: "3", es: "Queso Camarón", en: "Cheese & Shrimp", precio: "", sugerida: false, especial: false },
+      { num: "4", es: "Queso Camarón Champiñón", en: "Cheese, Shrimp & Mushroom", precio: "", sugerida: true, especial: false },
+      { num: "5", es: "Queso Macha", en: "Cheese & Razor Clams", precio: "", sugerida: true, especial: false },
+      { num: "6", es: "Queso Cabra Camarón Cebollín", en: "Goat Cheese, Shrimp & Chives", precio: "", sugerida: true, especial: false },
+      { num: "7", es: "Queso Atún Tomate", en: "Cheese, Tuna & Tomato", precio: "", sugerida: false, especial: false },
+      { num: "8", es: "Queso Atún Tomate Choclo", en: "Cheese, Tuna, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      { num: "9", es: "Queso Atún Tomate Espinaca", en: "Cheese, Tuna, Tomato & Spinach", precio: "", sugerida: false, especial: false },
+      { num: "10", es: "Queso Chorizo", en: "Cheese & Sausage", precio: "", sugerida: false, especial: false },
+      { num: "11", es: "Queso Chorizo Tomate", en: "Cheese, Sausage & Tomato", precio: "", sugerida: false, especial: false },
+      { num: "12", es: "Queso Chorizo Cebolla Tomate", en: "Cheese, Sausage, Onion & Tomato", precio: "", sugerida: false, especial: false },
+      { num: "13", es: "Queso Salame", en: "Cheese & Salami", precio: "", sugerida: false, especial: false },
+      { num: "14", es: "Queso Salame Jamón", en: "Cheese, Salami & Ham", precio: "", sugerida: false, especial: false },
+      { num: "15", es: "Queso Salame Aceituna", en: "Cheese, Salami & Olives", precio: "", sugerida: false, especial: false },
+      { num: "16", es: "Queso Membrillo", en: "Cheese & Quince", precio: "", sugerida: false, especial: false },
+      { num: "17", es: "Queso Piña", en: "Cheese & Pineapple", precio: "", sugerida: false, especial: false },
+      { num: "18", es: "Queso Camarón Ciboulette", en: "Cheese, Shrimp & Chives", precio: "", sugerida: false, especial: false },
+      { num: "19", es: "Queso Salmón Alcaparra", en: "Cheese, Salmon & Capers", precio: "", sugerida: true, especial: false },
+      // 20 al 36
+      { num: "20", es: "Queso Pollo Choclo Crema", en: "Cheese, Chicken, Corn & Cream", precio: "", sugerida: false, especial: false },
+      { num: "21", es: "Queso Pollo", en: "Cheese & Chicken", precio: "", sugerida: false, especial: false },
+      { num: "22", es: "Queso Pollo Champiñón", en: "Cheese, Chicken & Mushroom", precio: "", sugerida: false, especial: false },
+      { num: "23", es: "Queso Pollo Aceitunas", en: "Cheese, Chicken & Olives", precio: "", sugerida: false, especial: false },
+      { num: "24", es: "Queso Pollo Salame", en: "Cheese, Chicken & Salami", precio: "", sugerida: false, especial: false },
+      { num: "25", es: "Queso Pollo Pimentón", en: "Cheese, Chicken & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "26", es: "Queso Pollo Espinaca Pimentón", en: "Cheese, Chicken, Spinach & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "27", es: "Queso Pollo Tocino", en: "Cheese, Chicken & Bacon", precio: "", sugerida: false, especial: false },
+      { num: "28", es: "Queso Pollo Tomate Choclo", en: "Cheese, Chicken, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      { num: "29", es: "Queso Pollo Choclo Tomate", en: "Cheese, Chicken, Corn & Tomato", precio: "", sugerida: false, especial: false },
+      { num: "30", es: "Queso Pollo Verduras", en: "Cheese, Chicken & Vegetables", precio: "", sugerida: false, especial: false },
+      { num: "31", es: "Queso Pollo Chorizo", en: "Cheese, Chicken & Sausage", precio: "", sugerida: false, especial: false },
+      { num: "32", es: "Queso Pollo Alcaparra", en: "Cheese, Chicken & Capers", precio: "", sugerida: false, especial: false },
+      { num: "33", es: "Queso Pollo Tocino Champiñón", en: "Cheese, Chicken, Bacon & Mushroom", precio: "", sugerida: false, especial: false },
+      { num: "34", es: "Queso Pollo Ciruela", en: "Cheese, Chicken & Plum", precio: "", sugerida: false, especial: false },
+      { num: "35", es: "Queso Pollo Nueces Espinaca Crema", en: "Cheese, Chicken, Walnut, Spinach & Cream", precio: "", sugerida: true, especial: false },
+      { num: "36", es: "Queso Pollo Pastelera Choclo Albahaca", en: "Cheese, Chicken, Corn Cream & Basil", precio: "", sugerida: false, especial: false },
+      // 37 al 48
+      { num: "37", es: "Queso Carne", en: "Cheese & Beef", precio: "", sugerida: false, especial: false },
+      { num: "38", es: "Queso Carne Choclo", en: "Cheese, Beef & Corn", precio: "", sugerida: false, especial: false },
+      { num: "39", es: "Queso Carne Aceituna", en: "Cheese, Beef & Olives", precio: "", sugerida: false, especial: false },
+      { num: "40", es: "Queso Carne Champiñón", en: "Cheese, Beef & Mushroom", precio: "", sugerida: false, especial: false },
+      { num: "41", es: "Queso Carne Salame", en: "Cheese, Beef & Salami", precio: "", sugerida: false, especial: false },
+      { num: "42", es: "Queso Carne Cebolla Tomate", en: "Cheese, Beef, Onion & Tomato", precio: "", sugerida: false, especial: false },
+      { num: "43", es: "Queso Carne Cebolla Pimentón", en: "Cheese, Beef, Onion & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "44", es: "Queso Carne Tocino Verduras", en: "Cheese, Beef, Bacon & Vegetables", precio: "", sugerida: false, especial: false },
+      { num: "45", es: "Queso Carne Tocino Champiñón", en: "Cheese, Beef, Bacon & Mushroom", precio: "", sugerida: false, especial: false },
+      { num: "46", es: "Queso Carne Tocino", en: "Cheese, Beef & Bacon", precio: "", sugerida: false, especial: false },
+      { num: "47", es: "Queso Carne Espinaca Pimentón", en: "Cheese, Beef, Spinach & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "48", es: "Queso Carne Tocino Alcaparra Aceituna", en: "Cheese, Beef, Bacon, Caper & Olives", precio: "", sugerida: false, especial: false },
+      // 49 al 53
+      { num: "49", es: "Queso Jamón", en: "Cheese & Ham", precio: "", sugerida: false, especial: false },
+      { num: "50", es: "Queso Jamón Choclo", en: "Cheese, Ham & Corn", precio: "", sugerida: false, especial: false },
+      { num: "51", es: "Queso Jamón Piña", en: "Cheese, Ham & Pineapple", precio: "", sugerida: false, especial: false },
+      { num: "52", es: "Queso Jamón Tomate Orégano", en: "Cheese, Ham, Tomato & Oregano", precio: "", sugerida: false, especial: false },
+      { num: "53", es: "Queso Jamón Choclo Pimentón", en: "Cheese, Ham, Corn & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      // 54 al 81
+      { num: "54", es: "Queso F. Alcachofa", en: "Cheese & Artichoke", precio: "", sugerida: false, especial: false },
+      { num: "55", es: "Queso F. Alcachofa Tomate Choclo", en: "Cheese, Artichoke, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      { num: "56", es: "Queso F. Alcachofa Espinaca Choclo", en: "Cheese, Artichoke, Spinach & Corn", precio: "", sugerida: false, especial: false },
+      { num: "57", es: "Queso Palmito", en: "Cheese & Palm Hearts", precio: "", sugerida: false, especial: false },
+      { num: "58", es: "Queso Palmito Tomate Choclo", en: "Cheese, Palm Hearts, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      { num: "59", es: "Queso Palmito Espinaca Choclo", en: "Cheese, Palm Hearts, Spinach & Corn", precio: "", sugerida: false, especial: false },
+      { num: "60", es: "Queso Rúcula Tomate Espinaca Aceituna Pimentón", en: "Cheese, Arugula, Tomato, Spinach, Olives & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "61", es: "Queso Champiñón Espinaca Cebollín Crema", en: "Cheese, Mushroom, Spinach, Onion & Cream", precio: "", sugerida: false, especial: false },
+      { num: "62", es: "Queso Cabra Tomate Albahaca", en: "Goat Cheese, Tomato & Basil", precio: "", sugerida: true, especial: false },
+      { num: "63", es: "Queso Verduras", en: "Cheese & Vegetables", precio: "", sugerida: false, especial: false },
+      { num: "64", es: "Queso Choclo", en: "Cheese & Corn", precio: "", sugerida: false, especial: false },
+      { num: "65", es: "Queso Choclo Albahaca Crema", en: "Cheese, Corn, Basil & Cream", precio: "", sugerida: false, especial: false },
+      { num: "66", es: "Queso Choclo Aceituna", en: "Cheese, Corn & Olives", precio: "", sugerida: false, especial: false },
+      { num: "67", es: "Queso Champiñón", en: "Cheese & Mushroom", precio: "", sugerida: false, especial: false },
+      { num: "68", es: "Queso Champiñón Choclo", en: "Cheese, Mushroom & Corn", precio: "", sugerida: false, especial: false },
+      { num: "69", es: "Queso Champiñón Aceituna", en: "Cheese, Mushroom & Olives", precio: "", sugerida: false, especial: false },
+      { num: "70", es: "Queso Aceituna", en: "Cheese & Olives", precio: "", sugerida: false, especial: false },
+      { num: "71", es: "Queso Aceituna Pimentón", en: "Cheese, Olives & Sweet Peppers", precio: "", sugerida: false, especial: false },
+      { num: "72", es: "Queso Tomate Albahaca", en: "Cheese, Tomato & Basil", precio: "", sugerida: false, especial: false },
+      { num: "73", es: "Queso Tomate Choclo", en: "Cheese, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      { num: "74", es: "Queso Tomate Piña", en: "Cheese, Tomato & Pineapple", precio: "", sugerida: false, especial: false },
+      { num: "75", es: "Queso Tomate Aceituna", en: "Cheese, Tomato & Olives", precio: "", sugerida: false, especial: false },
+      { num: "76", es: "Queso Tomate Cebollín Ají", en: "Cheese, Tomato, Onion & Chili", precio: "", sugerida: false, especial: false },
+      { num: "77", es: "Queso Espinaca Pimentón", en: "Cheese, Spinach & Sweet Pepper", precio: "", sugerida: false, especial: false },
+      { num: "78", es: "Queso Espinaca Crema", en: "Cheese, Spinach & Cream", precio: "", sugerida: false, especial: false },
+      { num: "79", es: "Queso Espinaca Nueces Crema", en: "Cheese, Spinach, Walnut & Cream", precio: "", sugerida: true, especial: false },
+      { num: "80", es: "Queso Espárrago Choclo Crema", en: "Cheese, Asparagus, Corn & Cream", precio: "", sugerida: false, especial: false },
+      { num: "81", es: "Queso Espárrago Tomate Choclo", en: "Cheese, Asparagus, Tomato & Corn", precio: "", sugerida: false, especial: false },
+      // Otras opciones (Especiales)
+      { num: "A1", es: "Queso Ostión", en: "Cheese & Scallop", precio: "", sugerida: false, especial: true },
+      { num: "A2", es: "Queso Pulpo Cebollín Pimentón Crema", en: "Cheese, Octopus, Onion, Sweet Pepper & Cream", precio: "", sugerida: false, especial: true },
+      { num: "A3", es: "Queso Mango", en: "Cheese & Mango", precio: "", sugerida: false, especial: true },
+      { num: "A4", es: "Queso Mango Piña", en: "Cheese, Mango & Pineapple", precio: "", sugerida: true, especial: true },
+      { num: "B1", es: "Queso Manjar", en: "Cheese & Sweet Milk (Manjar)", precio: "", sugerida: false, especial: true },
+      { num: "B2", es: "Queso Manjar Nuez", en: "Cheese, Sweet Milk & Walnut", precio: "", sugerida: true, especial: true },
+      { num: "C1", es: "Queso Camarón Piña", en: "Cheese, Shrimp & Pineapple", precio: "", sugerida: false, especial: true },
+      { num: "C2", es: "Queso Jaiba", en: "Cheese & Crab", precio: "", sugerida: false, especial: true },
+      { num: "C3", es: "Queso Reineta Orégano Tomate Cebollín", en: "Cheese, Reineta Fish, Oregano, Tomato & Onion", precio: "", sugerida: false, especial: true }
+    ];
+
+    let currentMenuData = [...defaultMenu];
+    let currentView = 'todas';
+    let searchQuery = '';
+
+    function renderMenu() {
+      const container = document.getElementById('menuContainer');
+      container.innerHTML = '';
+
+      const filtered = currentMenuData.filter(item => {
+        let matchesCategory = true;
+        if (currentView === 'todas') {
+          matchesCategory = !item.especial; // Muestra del 1 al 81 correlativas
+        } else if (currentView === 'sugeridas') {
+          matchesCategory = item.sugerida;
+        } else if (currentView === 'otras') {
+          matchesCategory = item.especial;
+        }
+
+        const term = searchQuery.toLowerCase();
+        const matchesSearch = item.num.toLowerCase().includes(term) ||
+                              item.es.toLowerCase().includes(term) ||
+                              item.en.toLowerCase().includes(term);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#888; margin-top:30px;">No se encontraron resultados.</p>';
+        return;
+      }
+
+      const section = document.createElement('div');
+      section.className = 'category-section';
+
+      let sectionTitle = 'Todas las Empanadas (1 al 81)';
+      if (currentView === 'sugeridas') sectionTitle = '★ Sugeridas de la Casa';
+      if (currentView === 'otras') sectionTitle = 'Otras Opciones (Especiales)';
+
+      const title = document.createElement('h2');
+      title.className = 'category-title';
+      title.innerHTML = `<span>${sectionTitle}</span> <span style="font-size:0.8rem; font-weight:normal; opacity:0.7;">${filtered.length} opciones</span>`;
+      section.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'menu-grid';
+
+      filtered.forEach(it => {
+        const card = document.createElement('div');
+        card.className = 'menu-card';
+        card.innerHTML = `
+          <div class="card-left">
+            <div class="item-badge">${it.num}</div>
+            <div class="item-info">
+              <h3>${it.es}</h3>
+              <p>${it.en}</p>
+            </div>
+          </div>
+          <div class="card-price">${it.precio ? '$' + it.precio : ''}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      renderMenu();
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentView = btn.dataset.view;
+        renderMenu();
+      });
+    });
+
+    renderMenu();
+  </script>
+</body>
+</html>
