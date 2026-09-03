@@ -32,57 +32,74 @@
       padding-bottom: 70px;
     }
 
-    /* HEADER Y LOGO */
+    /* HEADER CON LOGO COMO PROTAGONISTA */
     header {
-      background: linear-gradient(180deg, #1f1a14 0%, var(--bg-dark) 100%);
+      position: relative;
+      background: radial-gradient(circle at center, rgba(245, 166, 35, 0.08) 0%, var(--bg-dark) 75%);
       text-align: center;
-      padding: 30px 20px 20px;
+      padding: 24px 16px 18px;
       border-bottom: 1px solid var(--card-border);
-    }
-
-    .logo-container {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto 12px;
-      border-radius: 50%;
-      border: 3px solid var(--accent-gold);
-      background-color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25);
       overflow: hidden;
     }
 
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .header-hero {
+      position: relative;
+      max-width: 320px;
+      margin: 0 auto 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.8rem;
-      color: var(--accent-gold);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
+    .header-hero::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(245, 166, 35, 0.22) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.7));
+      transition: transform 0.3s ease;
+    }
+
+    .hero-logo:hover {
+      transform: scale(1.02);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 3;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       letter-spacing: 2px;
-      color: var(--text-muted);
+      color: var(--accent-gold);
+      font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     }
 
     .description {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.88rem;
+      color: var(--text-main);
+      opacity: 0.9;
       max-width: 480px;
       margin: 0 auto;
-      line-height: 1.4;
+      line-height: 1.45;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
     /* CONTROLES: BUSCADOR Y PESTAÑAS */
@@ -355,16 +372,17 @@
 </head>
 <body>
 
-  <!-- ENCABEZADO -->
+  <!-- ENCABEZADO CON LOGO ILUSTRADO -->
   <header>
-    <div class="logo-container">
-      <img src="logo.png" alt="Delicias Express Logo" onerror="this.style.display='none'">
+    <div class="header-hero">
+      <img src="logo.png" alt="Delicias Express" class="hero-logo">
     </div>
-    <h1>Delicias Express</h1>
-    <div class="subtitle">Empanadas Fritas</div>
-    <p class="description">
-      Más de 80 combinaciones preparadas al momento. Elige por número y disfruta de la mejor calidad.
-    </p>
+    <div class="header-content">
+      <div class="subtitle">Empanadas Fritas</div>
+      <p class="description">
+        Más de 80 combinaciones preparadas al momento. Elige por número y disfruta de la mejor calidad.
+      </p>
+    </div>
   </header>
 
   <!-- BUSCADOR Y PESTAÑAS -->
@@ -426,10 +444,10 @@
   </footer>
 
   <script>
-    // Enlace de las empanadas (Hoja 1)
+    // 1. Hoja principal de empanadas
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSjEJ7urn5w8RDK-F8JD55YpSxN_fdRB3VMF0JJKYshpt4_rlQJCG6PsX7ewh8US7XfbCA4on_bybj7/pub?output=csv';
 
-    // PEGA AQUÍ EL ENLACE CSV DE LA SEGUNDA PESTAÑA ('Agregados'):
+    // 2. Segunda pestaña ('Agregados') publicada como CSV:
     const SHEET_EXTRAS_CSV_URL = 'PEGA_AQUI_EL_ENLACE_CSV_DE_AGREGADOS';
 
     let currentMenuData = [];
@@ -512,7 +530,7 @@
       });
     });
 
-    // Analizador CSV respetando comillas y comas internas
+    // Función que procesa cada línea del CSV respetando comillas
     function parseCSVLine(text) {
       const result = [];
       let cur = '';
@@ -532,7 +550,7 @@
       return result;
     }
 
-    // 1. Cargar Empanadas desde Google Sheets
+    // Carga de empanadas desde la hoja 1
     async function loadMenuFromSheets() {
       if (!SHEET_CSV_URL) return;
       try {
@@ -558,11 +576,11 @@
         currentMenuData = items;
         renderMenu();
       } catch (err) {
-        console.error('Error al cargar la hoja de cálculo:', err);
+        console.error('Error al cargar la hoja de empanadas:', err);
       }
     }
 
-    // 2. Cargar Agregados desde la segunda pestaña de Google Sheets
+    // Carga de agregados desde la hoja 2
     async function loadExtrasFromSheets() {
       if (!SHEET_EXTRAS_CSV_URL || SHEET_EXTRAS_CSV_URL === 'PEGA_AQUI_EL_ENLACE_CSV_DE_AGREGADOS') return;
       try {
@@ -587,7 +605,6 @@
       }
     }
 
-    // Ejecución inicial
     loadMenuFromSheets();
     loadExtrasFromSheets();
   </script>
