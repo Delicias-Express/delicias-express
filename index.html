@@ -102,7 +102,7 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
-    /* CONTROLES: BUSCADOR Y PESTAÑAS */
+    /* CONTROLES: BUSCADOR Y PESTAÑAS RESPONSIVAS */
     .controls {
       position: sticky;
       top: 0;
@@ -111,6 +111,7 @@
       z-index: 100;
       padding: 12px 16px;
       border-bottom: 1px solid var(--card-border);
+      width: 100%;
     }
 
     .search-box {
@@ -141,16 +142,25 @@
     .categories-bar {
       display: flex;
       gap: 10px;
-      justify-content: center;
+      justify-content: flex-start;
       overflow-x: auto;
-      padding-bottom: 4px;
+      padding: 4px 8px 8px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
       max-width: 700px;
       margin: 0 auto;
     }
 
     .categories-bar::-webkit-scrollbar {
       display: none;
+    }
+
+    @media (min-width: 600px) {
+      .categories-bar {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
 
     .filter-btn {
@@ -164,6 +174,7 @@
       white-space: nowrap;
       cursor: pointer;
       transition: all 0.2s;
+      flex-shrink: 0;
     }
 
     .filter-btn.active {
@@ -175,6 +186,7 @@
 
     /* CONTENEDOR DE PRODUCTOS */
     main {
+      width: 100%;
       max-width: 750px;
       margin: 20px auto 0;
       padding: 0 16px;
