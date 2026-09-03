@@ -407,6 +407,25 @@
     });
 
     // Carga automática desde Google Sheets
+    function parseCSVLine(text) {
+      const result = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '"') {
+          inQuotes = !inQuotes;
+        } else if (c === ',' && !inQuotes) {
+          result.push(cur.trim().replace(/^"|"$/g, ''));
+          cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      result.push(cur.trim().replace(/^"|"$/g, ''));
+      return result;
+    }
+
     async function loadMenuFromSheets() {
       if (!SHEET_CSV_URL || SHEET_CSV_URL === 'PEGA_AQUI_TU_ENLACE_CSV') {
         return;
@@ -414,18 +433,19 @@
       try {
         const res = await fetch(SHEET_CSV_URL);
         const text = await res.text();
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
         
         const items = [];
         // Saltamos la fila 0 (encabezados)
         for (let i = 1; i < lines.length; i++) {
-          const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+          const cols = parseCSVLine(lines[i]);
           if (cols.length >= 4) {
             items.push({
               num: cols[0],
               es: cols[1],
               en: cols[2],
-              precio: cols[3],
+              // Si el precio es '0' o está vacío, no muestra nada o muestra el valor limpio
+              precio: (cols[3] === '0' || cols[3] === '') ? '' : cols[3],
               sugerida: (cols[4] || '').toUpperCase() === 'SI',
               especial: (cols[5] || '').toUpperCase() === 'SI'
             });
