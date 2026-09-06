@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delicias Express - Catálogo de Variedades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --card-border: #2d2d2d;
+      --accent-gold: #f5a623;
+      --accent-gold-hover: #e0961b;
+      --text-main: #f0f0f0;
+      --text-muted: #a0a0a0;
+      --tag-bg: rgba(245, 166, 35, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Open Sans', sans-serif;
+      padding-bottom: 70px;
+    }
+
+    /* HEADER CON LOGO COMO PROTAGONISTA */
+    header {
+      position: relative;
+      background: radial-gradient(circle at center, rgba(245, 166, 35, 0.08) 0%, var(--bg-dark) 75%);
+      text-align: center;
+      padding: 24px 16px 18px;
+      border-bottom: 1px solid var(--card-border);
+      overflow: hidden;
+    }
+
+    .header-hero {
+      position: relative;
+      max-width: 320px;
+      margin: 0 auto 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .header-hero::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(245, 166, 35, 0.22) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.7));
+      transition: transform 0.3s ease;
+    }
+
+    .hero-logo:hover {
+      transform: scale(1.02);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .description {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      opacity: 0.9;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.45;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    }
+
+    /* CONTROLES: BUSCADOR Y PESTAÑAS RESPONSIVAS */
+    .controls {
+      position: sticky;
+      top: 0;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+      width: 100%;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 12px;
+      position: relative;
+      display: block;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 25px;
+      border: 1px solid var(--card-border);
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 10px rgba(245, 166, 35, 0.2);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      overflow-x: auto;
+      padding: 4px 8px 8px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (min-width: 600px) {
+      .categories-bar {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .filter-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-gold);
+      color: #121212;
+      border-color: var(--accent-gold);
+      box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
+    }
+
+    /* CONTENEDOR DE PRODUCTOS */
+    main {
+      width: 100%;
+      max-width: 750px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .category-section {
+      margin-bottom: 30px;
+    }
+
+    .category-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--accent-gold);
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .menu-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .menu-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .menu-card:hover {
+      border-color: rgba(245, 166, 35, 0.5);
+    }
+
+    .card-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .item-badge {
+      background-color: var(--tag-bg);
+      color: var(--accent-gold);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      min-width: 34px;
+      text-align: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(245, 166, 35, 0.2);
+    }
+
+    .item-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .item-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* OCULTAR PRECIOS PERMANENTEMENTE */
+    .card-price {
+      display: none !important;
+    }
+
+    /* AGREGADOS Y ADEREZOS EN BLANCO */
+    .extras-box {
+      background-color: var(--card-bg);
+      border: 1px dashed rgba(245, 166, 35, 0.4);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 30px auto;
+      font-size: 0.95rem;
+      color: #ffffff;
+      line-height: 1.8;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .extras-box h4 {
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .extras-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .extras-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .extras-list li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--accent-gold);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* FOOTER DE CONTACTOS AMPLIADO CON LOGOS */
+    footer {
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #171717 100%);
+      border-top: 1px solid var(--card-border);
+      padding: 35px 20px 25px;
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .contact-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 650px;
+      margin: 0 auto 20px;
+    }
+
+    .contact-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 10px 18px;
+      border-radius: 30px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .contact-badge:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2);
+    }
+
+    .contact-badge svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO CON LOGO ILUSTRADO -->
+  <header>
+    <div class="header-hero">
+      <img src="logo.png" alt="Delicias Express" class="hero-logo">
+    </div>
+    <div class="header-content">
+      <div class="subtitle">Empanadas Fritas</div>
+      <p class="description">
+        Más de 80 combinaciones preparadas al momento. Elige por número y disfruta de la mejor calidad.
+      </p>
+    </div>
+  </header>
+
+  <!-- BUSCADOR Y PESTAÑAS -->
+  <section class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por número o ingrediente...">
+    </div>
+    <div class="categories-bar" id="categoriesBar">
+      <button class="filter-btn active" data-view="todas">Empanadas</button>
+      <button class="filter-btn" data-view="sugeridas">★ Sugeridas</button>
+      <button class="filter-btn" data-view="otras">Otras opciones</button>
+    </div>
+  </section>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main id="menuContainer"></main>
+
+  <!-- AGREGADOS Y ADEREZOS EN BLANCO -->
+  <div style="max-width: 750px; margin: 0 auto; padding: 0 16px;">
+    <div class="extras-box">
+      <h4>Agregados y Aderezos:</h4>
+      <ul class="extras-list" id="extrasList">
+        <li>Aderezos (ají, ketchup, mostaza): $600 adicional.</li>
+        <li>Cada agregado extra tiene un valor diferenciado — consulta al pedir.</li>
+        <li>Vasos plásticos: $100 / $200 | Cartuchos para llevar: $50 / $100 / $150.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CONTACTO CON LOGOS SVG -->
+  <footer>
+    <div class="contact-title">Atención y Pedidos</div>
+    <div class="contact-grid">
+      <!-- WhatsApp -->
+      <a href="https://wa.me/56322237438" target="_blank" rel="noopener noreferrer" class="contact-badge" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="#25D366"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        <span>+56 32 223 7438</span>
+      </a>
+
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/profile.php?id=100092421084807" target="_blank" rel="noopener noreferrer" class="contact-badge" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        <span>Delicias Express</span>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://instagram.com/deliciasexpress358" target="_blank" rel="noopener noreferrer" class="contact-badge" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>@deliciasexpress358</span>
+      </a>
+
+      <!-- Gmail -->
+      <a href="mailto:delisolange@gmail.com" class="contact-badge" aria-label="Gmail">
+        <svg viewBox="0 0 24 24" fill="#EA4335"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.545l8.073-6.052C21.691 2.279 24 3.434 24 5.457z"/></svg>
+        <span>delisolange@gmail.com</span>
+      </a>
+    </div>
+    <div class="footer-copy">Delicias Express · Empanadas fritas hechas al momento</div>
+  </footer>
+
+  <script>
+    // 1. Hoja principal de empanadas
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSjEJ7urn5w8RDK-F8JD55YpSxN_fdRB3VMF0JJKYshpt4_rlQJCG6PsX7ewh8US7XfbCA4on_bybj7/pub?output=csv';
+
+    // 2. Segunda pestaña ('Agregados') publicada como CSV:
+    const SHEET_EXTRAS_CSV_URL = 'PEGA_AQUI_EL_ENLACE_CSV_DE_AGREGADOS';
+
+    let currentMenuData = [];
+    let currentView = 'todas';
+    let searchQuery = '';
+
+    function renderMenu() {
+      const container = document.getElementById('menuContainer');
+      container.innerHTML = '';
+
+      const filtered = currentMenuData.filter(item => {
+        let matchesCategory = true;
+        if (currentView === 'todas') {
+          matchesCategory = !item.especial;
+        } else if (currentView === 'sugeridas') {
+          matchesCategory = item.sugerida;
+        } else if (currentView === 'otras') {
+          matchesCategory = item.especial;
+        }
+
+        const term = searchQuery.toLowerCase();
+        const matchesSearch = item.num.toLowerCase().includes(term) ||
+                              item.es.toLowerCase().includes(term) ||
+                              item.en.toLowerCase().includes(term);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#888; margin-top:30px;">No se encontraron resultados.</p>';
+        return;
+      }
+
+      const section = document.createElement('div');
+      section.className = 'category-section';
+
+      let sectionTitle = 'Todas las Empanadas (1 al 81)';
+      if (currentView === 'sugeridas') sectionTitle = '★ Sugeridas de la Casa';
+      if (currentView === 'otras') sectionTitle = 'Otras Opciones (Especiales)';
+
+      const title = document.createElement('h2');
+      title.className = 'category-title';
+      title.innerHTML = `<span>${sectionTitle}</span> <span style="font-size:0.8rem; font-weight:normal; opacity:0.7;">${filtered.length} opciones</span>`;
+      section.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'menu-grid';
+
+      filtered.forEach(it => {
+        const card = document.createElement('div');
+        card.className = 'menu-card';
+        card.innerHTML = `
+          <div class="card-left">
+            <div class="item-badge">${it.num}</div>
+            <div class="item-info">
+              <h3>${it.es}</h3>
+              <p>${it.en}</p>
+            </div>
+          </div>
+          <div class="card-price">${it.precio ? '$' + it.precio : ''}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      renderMenu();
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentView = btn.dataset.view;
+        renderMenu();
+      });
+    });
+
+    // Función que procesa cada línea del CSV respetando comillas
+    function parseCSVLine(text) {
+      const result = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '"') {
+          inQuotes = !inQuotes;
+        } else if (c === ',' && !inQuotes) {
+          result.push(cur.trim().replace(/^"|"$/g, ''));
+          cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      result.push(cur.trim().replace(/^"|"$/g, ''));
+      return result;
+    }
+
+    // Carga de empanadas desde la hoja 1
+    async function loadMenuFromSheets() {
+      if (!SHEET_CSV_URL) return;
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        
+        const items = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = parseCSVLine(lines[i]);
+          if (cols.length >= 4) {
+            items.push({
+              num: cols[0],
+              es: cols[1],
+              en: cols[2],
+              precio: (cols[3] === '0' || cols[3] === '') ? '' : cols[3],
+              sugerida: (cols[4] || '').toUpperCase() === 'SI',
+              especial: (cols[5] || '').toUpperCase() === 'SI'
+            });
+          }
+        }
+
+        currentMenuData = items;
+        renderMenu();
+      } catch (err) {
+        console.error('Error al cargar la hoja de empanadas:', err);
+      }
+    }
+
+    // Carga de agregados desde la hoja 2
+    async function loadExtrasFromSheets() {
+      if (!SHEET_EXTRAS_CSV_URL || SHEET_EXTRAS_CSV_URL === 'PEGA_AQUI_EL_ENLACE_CSV_DE_AGREGADOS') return;
+      try {
+        const res = await fetch(SHEET_EXTRAS_CSV_URL);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+        const extras = [];
+        for (let i = 0; i < lines.length; i++) {
+          const itemText = lines[i].replace(/^"|"$/g, '').trim();
+          if (itemText) extras.push(itemText);
+        }
+
+        if (extras.length > 0) {
+          const extrasUl = document.getElementById('extrasList');
+          if (extrasUl) {
+            extrasUl.innerHTML = extras.map(e => `<li>${e}</li>`).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error al cargar la hoja de agregados:', err);
+      }
+    }
+
+    loadMenuFromSheets();
+    loadExtrasFromSheets();
+  </script>
+</body>
+</html>
